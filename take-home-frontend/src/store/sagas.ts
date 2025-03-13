@@ -8,7 +8,10 @@ import {
   addUserRequestSuccess,
   patchUserRequest,
   patchUserRequestFailed,
-  patchUserRequestSuccess
+  patchUserRequestSuccess,
+  deleteUserRequest,
+  deleteUserRequestFailure,
+  deleteUserRequestSuccess
 } from "./userSplice";
 
 import type { IUser } from "./types";
@@ -52,6 +55,22 @@ async function patch(payload: IUser) {
   return response.json();
 }
 
+async function del(id: number) {
+  const response = await fetch(`http://127.0.0.1:8000/users/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      id: id
+    })
+  });
+
+  if (!response.ok) throw new Error("Failed to delete user");
+
+  return response.json();
+}
+
 function* getUsersSaga() {
   try {
     const users:IUser[] = yield call(gets);
@@ -79,6 +98,15 @@ function* patchUserSaga(action: PayloadAction<IUser>) {
   }
 }
 
+function* deleteUserSaga(action: PayloadAction<number>) {
+  try {
+    const userId: number = yield call(del, action.payload);
+    yield put(deleteUserRequestSuccess(userId))
+  } catch (error) {
+    yield put(patchUserRequestFailed((error as Error).message));
+  }
+}
+
 
 function* watchGetUsers() {
   yield takeLatest(getUsersRequest, getUsersSaga)
@@ -92,10 +120,15 @@ function* watchPatchUser() {
   yield takeLatest(patchUserRequest.type, patchUserSaga)
 }
 
+function* watchDeleteUser() {
+  yield takeLatest(deleteUserRequest.type, deleteUserSaga)
+}
+
 export default function* rootSaga() {
   yield all([
     fork(watchGetUsers),
     fork(watchAddUser),
-    fork(watchPatchUser)
+    fork(watchPatchUser),
+    fork(watchDeleteUser)
   ])
 }

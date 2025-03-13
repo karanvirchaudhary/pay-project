@@ -23,3 +23,6 @@ class UserUpdate(BaseModel):
   last_name: Optional[str] = None
   user_name: Optional[str] = None
   date_of_birth: Optional[date] = None
+
+class UserDeleteResponse(BaseModel):
+  id: int

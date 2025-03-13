@@ -14,9 +14,9 @@ import {
   Input,
   ErrorMessage,
   FormBody,
-  SuccessMessageContainer,
-  SuccessMessageImage,
-  SuccessMessageText,
+  MessageContainer,
+  MessageImage,
+  MessageText,
   ButtonRow,
   BlackButton,
   TextButton
@@ -142,23 +142,23 @@ const EditMemberFormModal: React.FC<IModalFormProps> = ({
     >
       <>
         {isUserUpdated === true ? (
-          <SuccessMessageContainer>
-            <SuccessMessageImage src="/successMessageImage.png" />
-            <SuccessMessageText>Team member successfully updated.</SuccessMessageText>
+          <MessageContainer>
+            <MessageImage src="/successMessageImage.png" />
+            <MessageText>Team member successfully updated.</MessageText>
             <ButtonRow>
               <BlackButton onClick={onClose}>Update another member</BlackButton>
               <TextButton onClick={onClose}>View all team members</TextButton>
             </ButtonRow>
-          </SuccessMessageContainer>
+          </MessageContainer>
         ): (
           <>
             {isUserUpdateFailed === true ? (
-              <SuccessMessageContainer>
-                <SuccessMessageText>Unable to update team member's info</SuccessMessageText>
+              <MessageContainer>
+                <MessageText>Unable to update team member's info</MessageText>
                 <ButtonRow>
                   <TextButton onClick={onClose}>Exit</TextButton>
                 </ButtonRow>
-              </SuccessMessageContainer>
+              </MessageContainer>
             ): (
               <>
                 <FormHeading>Manage Member</FormHeading>

@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import Icon from '../icon';
 
 import EditMemberFormModal from '@/app/modalForms/editMemberModal';
+import DeleteMemberModalForm from '@/app/modalForms/deleteMember';
 
 import {
   TableContainer,
@@ -35,6 +36,7 @@ interface ITableProps<T> {
 function Table<T, >(props: ITableProps<T>) {
   const [selectedUserId, setSelectedUserId] = React.useState<number | null>(null);
   const [isEditUserModalOpen, setIsEditUserModalOpen] = React.useState<boolean>(false);
+  const [isDeleteUserModalOpen, setIsDeleteUserModalOpen] = React.useState<boolean>(false);
   const [activeRow, setActiveRow] = React.useState<number | null>(null);
 
   const handleOpenDropdown = (index: number) => {
@@ -52,12 +54,24 @@ function Table<T, >(props: ITableProps<T>) {
     setIsEditUserModalOpen(true);
   };
 
+  const handleDeleteMember = () => {
+    setIsDeleteUserModalOpen(true);
+  }
+
   const renderModals = () => (
     <>
       {isEditUserModalOpen && selectedUserId !== null && (
         <EditMemberFormModal
           isOpen={isEditUserModalOpen}
           onClose={() => setIsEditUserModalOpen(false)}
+          userId={selectedUserId}
+        />
+      )}
+
+      {isDeleteUserModalOpen && selectedUserId !== null && (
+        <DeleteMemberModalForm
+          isOpen={isDeleteUserModalOpen}
+          onClose={() => setIsDeleteUserModalOpen(false)}
           userId={selectedUserId}
         />
       )}
@@ -100,7 +114,11 @@ function Table<T, >(props: ITableProps<T>) {
                         >
                           Manage member
                         </DropdownOption>
-                        <DropdownDeleteOption>Delete</DropdownDeleteOption>
+                        <DropdownDeleteOption
+                          onClick={() => handleDeleteMember()}
+                        >
+                          Delete
+                        </DropdownDeleteOption>
                       </Dropdown>
                     )}
                   </DetailsButtonContainer>

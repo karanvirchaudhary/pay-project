@@ -10,7 +10,7 @@ from crud import (
   get_users,
   update_user
 )
-from schemas import UserBase, UserCreate, UserResponse, UserUpdate
+from schemas import UserBase, UserCreate, UserResponse, UserUpdate, UserDeleteResponse
 from database import engine, get_db
 
 
@@ -50,9 +50,9 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
 def create_new_user(user: UserCreate, db: Session = Depends(get_db)):
   return create_user(db, user)
 
-@app.delete("/users/{user_id}", response_model=UserResponse)
+@app.delete("/users/{user_id}", response_model=UserDeleteResponse)
 def deleteUser(user_id: int, db: Session = Depends(get_db)):
-  return delete_user
+  return delete_user(db, user_id)
 
 @app.patch("/users/{user_id}", response_model=UserResponse)
 def update_user_by_id(user_id: int, user_data: UserUpdate, db: Session = Depends(get_db)):

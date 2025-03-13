@@ -13,9 +13,9 @@ import {
   Input,
   ErrorMessage,
   FormBody,
-  SuccessMessageContainer,
-  SuccessMessageImage,
-  SuccessMessageText,
+  MessageContainer,
+  MessageImage,
+  MessageText,
   ButtonRow,
   BlackButton,
   TextButton
@@ -105,7 +105,7 @@ const AddNewMemberModalForm: React.FC<IModalFormProps> = ({
     const isValid = validateForm();
 
     if (isValid) {
-      dispatch(addUserRequest(form));
+      dispatch(addUserRequest({...form}));
     }
   };
 
@@ -138,23 +138,23 @@ const AddNewMemberModalForm: React.FC<IModalFormProps> = ({
     >
       <>
         {isUserAdded ? (
-          <SuccessMessageContainer>
-            <SuccessMessageImage src="/successMessageImage.png" />
-            <SuccessMessageText>Team member successfully added.</SuccessMessageText>
+          <MessageContainer>
+            <MessageImage src="/successMessageImage.png" />
+            <MessageText>Team member successfully added.</MessageText>
             <ButtonRow>
               <BlackButton onClick={handleResetState}>Add another member</BlackButton>
               <TextButton onClick={onClose}>View all team members</TextButton>
             </ButtonRow>
-          </SuccessMessageContainer>
+          </MessageContainer>
         ): (
           <>
             {isUserAddFailed ? (
-              <SuccessMessageContainer>
-                <SuccessMessageText>Unable to create new member</SuccessMessageText>
+              <MessageContainer>
+                <MessageText>Unable to create new member</MessageText>
                 <ButtonRow>
                   <TextButton onClick={onClose}>Exit</TextButton>
                 </ButtonRow>
-              </SuccessMessageContainer>
+              </MessageContainer>
             ): (
               <>
                 <FormHeading>Add Team Member</FormHeading>

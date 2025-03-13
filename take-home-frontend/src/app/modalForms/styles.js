@@ -92,21 +92,21 @@ export const FormBody = styled.div`
   gap: 20px;
 `;
 
-export const SuccessMessageContainer = styled.div`
+export const MessageContainer = styled.div`
   display: flex;
   width: 100%;
   flex-direction: column;
   align-items: center;
 `;
 
-export const SuccessMessageImage = styled.img`
+export const MessageImage = styled.img`
   height: 268px;
   width: 302px;
   object-fit: cover;
   object-position: center;
 `;
 
-export const SuccessMessageText = styled.h1`
+export const MessageText = styled.h1`
   font-family: 'Libre Baskerville';
   font-weight: 400;
   font-size: 32px;
@@ -142,3 +142,9 @@ export const TextButton = styled.button`
   background: none;
   color: #2C747E;
 `;
+
+export const DeleteMemberContainer= styled.div`
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+`
