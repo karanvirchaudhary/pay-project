@@ -21,14 +21,13 @@ const Overlay = styled.div`
   opacity: 0.8;
 `;
 
-const ModalContainer = styled.div<{ isOpen: boolean }>`
+const ModalContainer = styled.div`
   position: fixed;
   top: 0;
   right: 0;
   width: 40%;
   height: 100vh;
   background: #F8F9F7;
-  transform: ${({ isOpen }) => (isOpen ? "translateX(0)" : "translateX(100%)")};
   z-index: 1000;
   padding: 16px;
 `;
@@ -65,18 +64,20 @@ const Modal: React.FC<IModalProps> = ({ isOpen, onClose, children }) => {
   return (
     <>
       {isOpen && (
-        <Overlay onClick={onClose} />
+        <>
+          <Overlay onClick={onClose} />
+          <ModalContainer>
+            <ModalHeader>
+              <IconButton onClick={onClose}>
+                <Icon src="/close-circle-icon.svg" height={40} width={40} />
+              </IconButton>
+            </ModalHeader>
+            <ModalBody>
+              {children}
+            </ModalBody>
+          </ModalContainer>
+        </>
       )}
-      <ModalContainer isOpen={isOpen}>
-        <ModalHeader>
-          <IconButton onClick={onClose}>
-            <Icon src="/close-circle-icon.svg" height={40} width={40} />
-          </IconButton>
-        </ModalHeader>
-        <ModalBody>
-          {children}
-        </ModalBody>
-      </ModalContainer>
     </>
   );
 };

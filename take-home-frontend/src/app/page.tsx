@@ -88,9 +88,9 @@ export default function Home() {
 
   const userColumns: IColumn<IUser>[] = [
     { key: "id", label: "ID", width: "5%"},
+    { key: "user_name", label: "Username", width: "20%"},
     { key: "first_name", label: "First Name", width: "20%" },
     { key: "last_name", label: "Last Name", width: "20%"},
-    { key: "user_name", label: "Username", width: "20%"},
     { key: "date_of_birth", label: "Date of Birth", width: "20%"},
   ];
 
