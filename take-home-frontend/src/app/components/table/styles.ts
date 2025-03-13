@@ -79,7 +79,7 @@ export const DetailsButton = styled.button`
 export const Dropdown = styled.div`
   position: absolute;
   top: 100%;
-  left: 0;
+  left: auto;
   background-color: white;
   border: 2px solid #585B52;
   padding: 16px;
