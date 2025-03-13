@@ -9,14 +9,14 @@ export interface IModalProps {
   children: React.ReactNode;
 }
 
-const Overlay = styled.div<{ isOpen: boolean }>`
+const Overlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
   background: #F5F5F4;
-  display: ${({ isOpen }) => (isOpen ? "block" : "none")};
+  display: block;
   z-index: 1;
   opacity: 0.8;
 `;
@@ -64,7 +64,9 @@ const ModalBody = styled.div`
 const Modal: React.FC<IModalProps> = ({ isOpen, onClose, children }) => {
   return (
     <>
-      <Overlay isOpen={isOpen} onClick={onClose} />
+      {isOpen && (
+        <Overlay onClick={onClose} />
+      )}
       <ModalContainer isOpen={isOpen}>
         <ModalHeader>
           <IconButton onClick={onClose}>
