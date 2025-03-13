@@ -1,0 +1,45 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# Backend
+backend/.venv
+backend/__pycache__
+
+# dependencies
+take-home-frontend/node_modules
+take-home-frontend/.pnp
+take-home-frontend/.pnp.*
+take-home-frontend/.yarn/*
+take-home-frontend/!.yarn/patches
+take-home-frontend/!.yarn/plugins
+take-home-frontend/!.yarn/releases
+take-home-frontend/!.yarn/versions
+
+# testing
+take-home-frontend/coverage
+
+# next.js
+take-home-frontend/.next/
+take-home-frontend/out/
+
+# production
+take-home-frontend/build
+
+# misc
+take-home-frontend/.DS_Store
+take-home-frontend/*.pem
+
+# debug
+take-home-frontend/npm-debug.log*
+take-home-frontend/yarn-debug.log*
+take-home-frontend/yarn-error.log*
+take-home-frontend/.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+take-home-frontend/.env*
+
+# vercel
+take-home-frontend/.vercel
+
+# typescript
+take-home-frontend/*.tsbuildinfo
+take-home-frontend/next-env.d.ts
