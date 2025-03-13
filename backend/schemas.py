@@ -3,7 +3,6 @@ from typing import Optional
 from datetime import date
 
 class UserBase(BaseModel):
-  id: int
   first_name: str
   last_name: str
   user_name: str
@@ -13,6 +12,7 @@ class UserCreate(UserBase):
   pass
 
 class UserResponse(UserBase):
+  id: int
   pass
 
   class Config:

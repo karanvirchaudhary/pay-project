@@ -106,6 +106,8 @@ const usersSlice = createSlice({
         state.users.splice(index, 1);
         state.lastModifiedId = action.payload;
       }
+      state.loading.delete.isLoading = false;
+      state.loading.delete.isSucceeded = true;
     },
     deleteUserRequestFailure: (state, action: PayloadAction<string>) => {
       state.loading.delete.isSucceeded = false;
