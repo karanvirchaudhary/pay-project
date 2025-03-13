@@ -63,6 +63,7 @@ const AddNewMemberModalForm: React.FC<IModalFormProps> = ({
   });
 
   const [isUserAdded, setIsUserAdded] = React.useState<boolean>(false);
+  const [isUserAddFailed, setIsUserAddFailed] = React.useState<boolean>(false);
 
   const form = formState.form;
   const formErrors = formState.formErrors;
@@ -122,10 +123,13 @@ const AddNewMemberModalForm: React.FC<IModalFormProps> = ({
   };
 
   React.useEffect(() => {
-    if (addUserLoadingState.isSucceeded === true) {
-      setIsUserAdded(true)
+    if (addUserLoadingState.isLoading === false && addUserLoadingState.isSucceeded === true) {
+      setIsUserAdded(true);
     }
-  }, [addUserLoadingState.isLoading])
+    else if (addUserLoadingState.isLoading === false && addUserLoadingState.isSucceeded === false) {
+      setIsUserAddFailed(true);
+    }
+  }, [addUserLoadingState.isLoading]);
 
   return (
     <Modal
@@ -144,38 +148,49 @@ const AddNewMemberModalForm: React.FC<IModalFormProps> = ({
           </SuccessMessageContainer>
         ): (
           <>
-            <FormHeading>Add Team Member</FormHeading>
-            <Form onSubmit={handleSubmit}>
-              <FormBody>
-                <Label>
-                  Username
-                  <Input placeholder="user_name" type="user_name" name="user_name" value={form.user_name} onChange={handleChange} />
-                  {formErrors.user_name && <ErrorMessage>{formErrors.user_name}</ErrorMessage>}
-                </Label>
+            {isUserAddFailed ? (
+              <SuccessMessageContainer>
+                <SuccessMessageText>Unable to create new member</SuccessMessageText>
+                <ButtonRow>
+                  <TextButton onClick={onClose}>Exit</TextButton>
+                </ButtonRow>
+              </SuccessMessageContainer>
+            ): (
+              <>
+                <FormHeading>Add Team Member</FormHeading>
+                <Form onSubmit={handleSubmit}>
+                  <FormBody>
+                    <Label>
+                      Username
+                      <Input placeholder="user_name" type="user_name" name="user_name" value={form.user_name} onChange={handleChange} />
+                      {formErrors.user_name && <ErrorMessage>{formErrors.user_name}</ErrorMessage>}
+                    </Label>
 
-                <Label>
-                  First name
-                  <Input placeholder="First Name" type="text" name="first_name" value={form.first_name} onChange={handleChange} />
-                  {formErrors.first_name && <ErrorMessage>{formErrors.first_name}</ErrorMessage>}
-                </Label>
+                    <Label>
+                      First name
+                      <Input placeholder="First Name" type="text" name="first_name" value={form.first_name} onChange={handleChange} />
+                      {formErrors.first_name && <ErrorMessage>{formErrors.first_name}</ErrorMessage>}
+                    </Label>
 
-                <Label>
-                  Last Name
-                  <Input placeholder="Last Name" type="text" name="last_name" value={form.last_name} onChange={handleChange} />
-                  {formErrors.last_name && <ErrorMessage>{formErrors.last_name}</ErrorMessage>}
-                </Label>
+                    <Label>
+                      Last Name
+                      <Input placeholder="Last Name" type="text" name="last_name" value={form.last_name} onChange={handleChange} />
+                      {formErrors.last_name && <ErrorMessage>{formErrors.last_name}</ErrorMessage>}
+                    </Label>
 
-                <Label>
-                  Date of Birth (optional)
-                  <Input type="date" name="date_of_birth" value={form.date_of_birth} onChange={handleChange} />
-                  {formErrors.date_of_birth && <ErrorMessage>{formErrors.date_of_birth}</ErrorMessage>}
-                </Label>
-              </FormBody>
+                    <Label>
+                      Date of Birth (optional)
+                      <Input type="date" name="date_of_birth" value={form.date_of_birth} onChange={handleChange} />
+                      {formErrors.date_of_birth && <ErrorMessage>{formErrors.date_of_birth}</ErrorMessage>}
+                    </Label>
+                  </FormBody>
 
-              <FormFooter>
-                <FormButton type="submit" color="#1A1B18">Add Member</FormButton>
-              </FormFooter>
-            </Form>
+                  <FormFooter>
+                    <FormButton type="submit" color="#1A1B18">Add Member</FormButton>
+                  </FormFooter>
+                </Form>
+              </>
+            )}
           </>
         )}
       </>
