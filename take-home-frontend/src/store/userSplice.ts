@@ -68,7 +68,7 @@ const usersSlice = createSlice({
       state.loading.gets.isLoading = false;
     },
 
-    patchUserRequest: (state, action: PayloadAction<number>) => {
+    patchUserRequest: (state, action: PayloadAction<IUser>) => {
       state.loading.patch.isLoading = true;
     },
     patchUserRequestSuccess: (state, action: PayloadAction<IUser>) => {

@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import type { IUser } from "@/store/types";
 
 import Modal from "../components/modal";
 
@@ -8,7 +9,7 @@ import {
   Form,
   FormHeading,
   FormFooter,
-  FormButton,
+  FormButtonBlack,
   Label,
   Input,
   ErrorMessage,
@@ -22,12 +23,13 @@ import {
  } from './styles';
 
 import type { RootState } from "@/store/store";
-import { addUserRequest } from '@/store/userSplice';
+import { patchUserRequest } from '@/store/userSplice';
 
 
 interface IModalFormProps {
   isOpen: boolean;
   onClose: () => void;
+  userId: number;
 }
 
 export interface IUserForm {
@@ -37,22 +39,22 @@ export interface IUserForm {
   date_of_birth: string;
 }
 
-interface IAddUserFormErrors {
+interface IEditUserFormErrors {
   user_name?: string;
   first_name?: string;
   last_name?: string;
   date_of_birth?: string;
 }
 
-interface IAddUserFormState {
+interface IEditUserFormState {
   form: IUserForm;
-  formErrors: IAddUserFormErrors;
+  formErrors: IEditUserFormErrors;
 }
 
 const EditMemberFormModal: React.FC<IModalFormProps> = ({
-  isOpen, onClose
+  isOpen, onClose, userId
 }) => {
-  const [formState, setFormState] = React.useState<IAddUserFormState>({
+  const [formState, setFormState] = React.useState<IEditUserFormState>({
     form: {
       user_name: "",
       first_name: "",
@@ -62,14 +64,26 @@ const EditMemberFormModal: React.FC<IModalFormProps> = ({
     formErrors: {}
   });
 
-  const [isUserAdded, setIsUserAdded] = React.useState<boolean>(true);
+  const users = useSelector((state: RootState) => state.user.users);
+
+  React.useEffect(() => {
+    const user = users.find((user) => user.id === userId);
+    if (user) {
+      setFormState({
+        form: {...user},
+        formErrors: {}
+      });
+    }
+  }, []);
+
+  const [isUserUpdated, setIsUserUpdated] = React.useState<boolean>(false);
 
   const form = formState.form;
   const formErrors = formState.formErrors;
 
   const dispatch = useDispatch();
 
-  const addUserLoadingState = useSelector((state: RootState) => state.user.loading.post);
+  const EditUserLoadingState = useSelector((state: RootState) => state.user.loading.patch);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormState((prevState) => ({
@@ -104,8 +118,10 @@ const EditMemberFormModal: React.FC<IModalFormProps> = ({
     const isValid = validateForm();
 
     if (isValid) {
-      console.log(" yoooo");
-      dispatch(addUserRequest(form));
+      dispatch(patchUserRequest({
+        ...form,
+        id: userId,
+      }));
     }
   };
 
@@ -119,7 +135,7 @@ const EditMemberFormModal: React.FC<IModalFormProps> = ({
       },
       formErrors: {}
     });
-    setIsUserAdded(false);
+    setIsUserUpdated(false);
   };
 
   return (
@@ -128,7 +144,7 @@ const EditMemberFormModal: React.FC<IModalFormProps> = ({
       onClose={onClose}
     >
       <>
-        {isUserAdded ? (
+        {isUserUpdated ? (
           <SuccessMessageContainer>
             <SuccessMessageImage src="/successMessageImage.png" />
             <SuccessMessageText>Team member successfully added.</SuccessMessageText>
@@ -139,7 +155,7 @@ const EditMemberFormModal: React.FC<IModalFormProps> = ({
           </SuccessMessageContainer>
         ): (
           <>
-            <FormHeading>Add Team Member</FormHeading>
+            <FormHeading>Manage Member</FormHeading>
             <Form onSubmit={handleSubmit}>
               <FormBody>
                 <Label>
@@ -168,7 +184,7 @@ const EditMemberFormModal: React.FC<IModalFormProps> = ({
               </FormBody>
 
               <FormFooter>
-                <FormButton type="submit" color="#1A1B18">Add Member</FormButton>
+                <FormButtonBlack type="submit" color="#1A1B18">Save Changes</FormButtonBlack>
               </FormFooter>
             </Form>
           </>

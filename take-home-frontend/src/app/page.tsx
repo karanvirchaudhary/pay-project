@@ -13,6 +13,9 @@ import SideMenu from './components/sideMenu';
 import AddNewMemberModalForm from './modalForms/addMember';
 
 import type { RootState } from '@/store/store';
+import type { IColumn } from './components/table';
+import type { IUser } from '@/store/types';
+
 import { getUsersRequest } from '@/store/userSplice';
 
 const PageContainer = styled.div`
@@ -83,34 +86,13 @@ export default function Home() {
     dispatch(getUsersRequest());
   }, []);
 
-  const userTableHeadings = [
-    "ID",
-    "Username",
-    "First Name",
-    "Last Name",
-    "Date of Birth",
-    ""
+  const userColumns: IColumn<IUser>[] = [
+    { key: "id", label: "ID" },
+    { key: "first_name", label: "First Name", },
+    { key: "last_name", label: "Last Name", },
+    { key: "user_name", label: "Username", },
+    { key: "date_of_birth", label: "Date of Birth" },
   ];
-
-  const userTableRows = users ? users.map((user, i) => ({
-    columns: [
-      {
-        data: user.id
-      },
-      {
-        data: user.user_name
-      },
-      {
-        data: user.first_name
-      },
-      {
-        data: user.last_name
-      },
-      {
-        data: user.date_of_birth
-      }
-    ]
-  })) : [];
 
   const [isAddMemberModalOpen, setIsAddMemberModalOpen] = React.useState(false);
 
@@ -150,7 +132,7 @@ export default function Home() {
               )}
 
               {getUsersLoadingState.isLoading === false && getUsersLoadingState.isSucceeded === true && (
-                <Table headingColumns={userTableHeadings} rows={userTableRows} />
+                <Table columnHeadings={userColumns} data={users} />
               )}
             </PageContentContainer>
           </PageLayout>

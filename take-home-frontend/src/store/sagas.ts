@@ -5,7 +5,10 @@ import {
   getUsersRequestSuccess,
   addUserRequest,
   addUserRequestFailure,
-  addUserRequestSuccess
+  addUserRequestSuccess,
+  patchUserRequest,
+  patchUserRequestFailed,
+  patchUserRequestSuccess
 } from "./userSplice";
 
 import type { IUser } from "./types";
@@ -30,7 +33,21 @@ async function post(payload: IUserForm) {
     body: JSON.stringify(payload)
   });
 
-  if (!response.ok) throw new Error("Failed to fetch user");
+  if (!response.ok) throw new Error("Failed to add user");
+
+  return response.json();
+}
+
+async function patch(payload: IUser) {
+  const response = await fetch(`http://127.0.0.1:8000/users/${payload.id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (!response.ok) throw new Error("Failed to update user");
 
   return response.json();
 }
@@ -53,6 +70,16 @@ function* addUserSaga(action: PayloadAction<IUser>) {
   }
 }
 
+function* patchUserSaga(action: PayloadAction<IUser>) {
+  try {
+    const user:IUser = yield call(patch, action.payload);
+    yield put(patchUserRequestSuccess(user))
+  } catch (error) {
+    yield put(patchUserRequestFailed((error as Error).message));
+  }
+}
+
+
 function* watchGetUsers() {
   yield takeLatest(getUsersRequest, getUsersSaga)
 }
@@ -61,9 +88,14 @@ function* watchAddUser() {
   yield takeLatest(addUserRequest.type, addUserSaga)
 }
 
+function* watchPatchUser() {
+  yield takeLatest(patchUserRequest.type, patchUserSaga)
+}
+
 export default function* rootSaga() {
   yield all([
     fork(watchGetUsers),
     fork(watchAddUser),
+    fork(watchPatchUser)
   ])
 }

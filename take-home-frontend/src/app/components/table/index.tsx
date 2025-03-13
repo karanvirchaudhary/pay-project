@@ -1,119 +1,116 @@
 'use client';
 
 import React from 'react';
-import styled from 'styled-components';
+import { useSelector } from "react-redux";
 
 import Icon from '../icon';
 
-interface ITableRow {
-  columns: ITableCell[];
+import EditMemberFormModal from '@/app/modalForms/editMemberModal';
+
+import {
+  TableContainer,
+  StyledTable,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  DetailsButtonContainer,
+  DetailsButton,
+  Dropdown,
+  DropdownOption,
+  DropdownDeleteOption
+} from './styles';
+
+import type { IUser } from '@/store/types';
+
+export interface IColumn<T> {
+  key: keyof T;
+  label: string;
+}
+interface ITableProps<T> {
+  data: T[];
+  columnHeadings: IColumn<T>[];
 }
 
-interface ITableCell {
-  data: React.ReactNode | string | number;
-  columnSize?: number;
-}
+function Table<T, >(props: ITableProps<T>) {
+  const [selectedUserId, setSelectedUserId] = React.useState<number | null>(null);
+  const [isEditUserModalOpen, setIsEditUserModalOpen] = React.useState<boolean>(false);
+  const [activeRow, setActiveRow] = React.useState<number | null>(null);
 
-interface ITableProps {
-  headingColumns: string[];
-  rows: ITableRow[];
-}
+  const handleOpenDropdown = (index: number) => {
+    setActiveRow(activeRow === index ? null : index);
+  };
 
-const TableContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 16px 12px;
-  background-color: #EDEDEC;
-  width: 100%;
-`;
+  React.useEffect(() => {
+    if (activeRow !== null) {
+      const matchingRow = props.data.at(activeRow) as IUser;
+      setSelectedUserId(matchingRow.id);
+    }
+  }, [activeRow]);
 
-const StyledTable = styled.table`
-  display: table;
-  width: 100%;
-  border-radius: 8px;
-  border-spacing: 0;
-`
+  const handleManageMember = () => {
+    setIsEditUserModalOpen(true);
+  };
 
-const TableHead = styled.thead`
-  background-color: #FFFFFF;
-  border-radius: 8px;
-  padding-left: 4px;
-  padding-right: 4px;
-  width: 100%;
-  color: #2c747e;
-  font-weight: 700;
-  font-size: 12px;
-  line-height: 16px;
-  font-family: 'Manrope';
-  letter-spacing: 8%;
-  vertical-align: middle;
-  text-transform: uppercase;
-`;
+  const renderModals = () => (
+    <>
+      {isEditUserModalOpen && selectedUserId !== null && (
+        <EditMemberFormModal
+          isOpen={isEditUserModalOpen}
+          onClose={() => setIsEditUserModalOpen(false)}
+          userId={selectedUserId}
+        />
+      )}
+    </>
+  );
 
-const TableRow = styled.tr`
-  width: 100%;
-
-  &:first-child td:first-child {
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
-  }
-  &:last-child td:last-child {
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-  }
-`;
-
-const TableCell = styled.td`
-  padding: 12px 8px;
-  font-family: 'Manrope';
-`;
-
-const TableBody = styled.tbody`
-  color: #44463f;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: 0%;
-  vertical-align: middle;
-`;
-
-const DetailsButton = styled.button`
-  background-color: #BFE7EE;
-  padding: 4px;
-  border-radius: 8px;
-`;
-
-function Table<T>(props: ITableProps) {
   return (
-    <TableContainer>
-      <StyledTable>
-        <TableHead>
-          <TableRow>
-            {props.headingColumns.map((heading, i) => (
-              <TableCell key={i}>{heading}</TableCell>
+    <>
+      {renderModals()}
+      <TableContainer>
+        <StyledTable>
+          <TableHead>
+            <TableRow>
+              {props.columnHeadings.map((colHeading, i) => (
+                <TableCell key={String(colHeading.key)}>
+                  {colHeading.label}
+                </TableCell>
+              ))}
+              <TableCell />
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {props.data.map((dataField, j) => (
+              <TableRow key={`${j}`}>
+                {props.columnHeadings.map((col, k) => (
+                  <TableCell key={`row-${j}-${String(col.key)}`}>
+                    {String(dataField[col.key])}
+                  </TableCell>
+                ))}
+
+                <TableCell>
+                  <DetailsButtonContainer>
+                    <DetailsButton onClick={() => handleOpenDropdown(j)}>
+                      <Icon src="/options-icon.svg" height={24} width={24} />
+                    </DetailsButton>
+                    {activeRow === j && (
+                      <Dropdown>
+                        <DropdownOption
+                          onClick={() => handleManageMember()}
+                        >
+                          Manage member
+                        </DropdownOption>
+                        <DropdownDeleteOption>Delete</DropdownDeleteOption>
+                      </Dropdown>
+                    )}
+                  </DetailsButtonContainer>
+                </TableCell>
+              </TableRow>
             ))}
-            <TableCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-        {props.rows.map((row, i) => (
-          <TableRow key={`row-${i}`}>
-            {row.columns ? row.columns.map((col, k) => (
-              <TableCell key={`row-${i}-cell-${k}`}>
-                {col.data}
-              </TableCell>
-            )): 'No data available'}
-            <TableCell>
-              <DetailsButton>
-                <Icon src="/options-icon.svg" height={24} width={24} />
-              </DetailsButton>
-            </TableCell>
-          </TableRow>
-        ))}
-        </TableBody>
-      </StyledTable>
-    </TableContainer>
+          </TableBody>
+        </StyledTable>
+      </TableContainer>
+    </>
   );
 }
 

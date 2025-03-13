@@ -18,6 +18,8 @@ export const FormFooter = styled.div`
   display: flex;
   padding: 16px;
   width: 100%;
+  margin-top: 172px;
+  border-top: 1px solid #dfe0dc;
 `;
 
 export const FormButton = styled.button`
@@ -31,6 +33,12 @@ export const FormButton = styled.button`
   letter-spacing: 0%;
   vertical-align: middle;
   padding: 16px 12px;
+  border-radius: 8px;
+`;
+
+export const FormButtonBlack = styled(FormButton)`
+  background-color: #1A1B18;
+  color: white;
 `;
 
 export const Label = styled.label`
