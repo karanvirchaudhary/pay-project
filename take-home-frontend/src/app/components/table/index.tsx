@@ -27,6 +27,7 @@ import type { IUser } from '@/store/types';
 export interface IColumn<T> {
   key: keyof T;
   label: string;
+  width?: string;
 }
 interface ITableProps<T> {
   data: T[];
@@ -97,12 +98,15 @@ function Table<T, >(props: ITableProps<T>) {
             {props.data.map((dataField, j) => (
               <TableRow key={`${j}`}>
                 {props.columnHeadings.map((col, k) => (
-                  <TableCell key={`row-${j}-${String(col.key)}`}>
+                  <TableCell
+                    key={`row-${j}-${String(col.key)}`}
+                    style={{ width: col.width || 'auto' }}
+                  >
                     {String(dataField[col.key])}
                   </TableCell>
                 ))}
 
-                <TableCell>
+                <TableCell style={{width: '5%'}}>
                   <DetailsButtonContainer>
                     <DetailsButton onClick={() => handleOpenDropdown(j)}>
                       <Icon src="/options-icon.svg" height={24} width={24} />
