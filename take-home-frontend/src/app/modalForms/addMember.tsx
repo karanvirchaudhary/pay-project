@@ -104,7 +104,6 @@ const AddNewMemberModalForm: React.FC<IModalFormProps> = ({
     const isValid = validateForm();
 
     if (isValid) {
-      console.log(" yoooo");
       dispatch(addUserRequest(form));
     }
   };

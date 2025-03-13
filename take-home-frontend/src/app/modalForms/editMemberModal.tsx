@@ -83,7 +83,7 @@ const EditMemberFormModal: React.FC<IModalFormProps> = ({
 
   const dispatch = useDispatch();
 
-  const EditUserLoadingState = useSelector((state: RootState) => state.user.loading.patch);
+  const editUserLoadingState = useSelector((state: RootState) => state.user.loading.patch);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormState((prevState) => ({
@@ -138,6 +138,12 @@ const EditMemberFormModal: React.FC<IModalFormProps> = ({
     setIsUserUpdated(false);
   };
 
+    React.useEffect(() => {
+      if (editUserLoadingState.isSucceeded === true) {
+        setIsUserUpdated(true)
+      }
+    }, [editUserLoadingState.isLoading])
+
   return (
     <Modal
       isOpen={isOpen}
@@ -147,9 +153,9 @@ const EditMemberFormModal: React.FC<IModalFormProps> = ({
         {isUserUpdated ? (
           <SuccessMessageContainer>
             <SuccessMessageImage src="/successMessageImage.png" />
-            <SuccessMessageText>Team member successfully added.</SuccessMessageText>
+            <SuccessMessageText>Team member successfully updated.</SuccessMessageText>
             <ButtonRow>
-              <BlackButton onClick={handleResetState}>Add another member</BlackButton>
+              <BlackButton onClick={onClose}>Update another member</BlackButton>
               <TextButton onClick={onClose}>View all team members</TextButton>
             </ButtonRow>
           </SuccessMessageContainer>
